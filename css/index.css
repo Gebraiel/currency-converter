@@ -1,0 +1,62 @@
+:root{
+  --flag:url('https://flagsapi.com/BE/flat/32.png');
+}
+main {
+  min-height: 100vh;
+  background: linear-gradient(0deg, #040711, transparent),
+    url(../images/hero_img.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  font-family: "DM Sans", sans-serif;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+select {
+  background-color: transparent;
+  color: #cdd5e0;
+  border:1px solid #4d5562;
+  outline: none;
+}
+.error{
+  color:red;
+  font-style: italic;
+}
+.input-container {
+  background-color: #212936cc;
+  color: white;
+  border-radius: 20px;
+  border: 1px solid #4d5562;
+}
+.input-container input{
+  border:1px solid #4d5562;
+  outline: none;
+}
+.btn {
+  border: 1px solid #4d5562;
+}
+
+.btn:hover {
+  border-color: #7ca9f3;
+}
+.select-container{
+  position: relative;
+}
+select{
+  padding-left:42px;
+}
+.select-container::after{
+  content:"";
+  background-image: var(--flag);
+  display: block;
+  position: absolute;
+  left:10px;
+  top:50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+}
