@@ -1,10 +1,11 @@
 let output = document.querySelector(".output");
-let counter = document.querySelector(".counter");
 let currienciesMenu = document.querySelectorAll("select");
 let switchBtn = document.querySelector(".btn.switch");
 let convertBtn = document.querySelector(".btn.convert");
 let fromSelect = document.querySelector(".from");
 let toSelect = document.querySelector(".to");
+let fromFlag = document.querySelector('.from-flag');
+let toFlag = document.querySelector('.to-flag');
 const data = {
   AED: "United Arab Emirates Dirham",
   AFN: "Afghan Afghani",
@@ -160,29 +161,32 @@ const data = {
 let languagesEntries = Object.entries(data);
 
 currienciesMenu.forEach((menu) => {
-  /*Adding the languages to the selects */
+  /*Change the flag image when the select value is changed  */
   menu.addEventListener('change',(e)=>{
     let flagCode = e.target.value.slice(0,2);
-    console.log(flagCode)
-    fetch(`https://flagsapi.com/EG/shiny/32.png`).then((response)=>response.json()).then((data)=>console.log(data)).catch((error)=>console.log(error.message));
+    let flagImage = `https://flagsapi.com/${flagCode}/shiny/32.png`;
+    menu.classList.contains('from') ? fromFlag.setAttribute('src',flagImage) : toFlag.setAttribute('src',flagImage);  
   })
+  /*Adding the currencies to the selects */
   languagesEntries.map((lang) => {
     menu.innerHTML += `<option class="language" value="${lang[0]}">${lang[1]}</option>`;
   });
 });
 switchBtn.addEventListener("click", () => {
-  /*Switch Languages */
-  let fromLang = fromSelect.value;
-  let toLang = toSelect.value;
-  fromSelect.value = toLang;
-  toSelect.value = fromLang;
+  /*Switch Currencies and flags */
+  let fromCur = fromSelect.value;
+  let toCur = toSelect.value;
+  let fromFlagSrc = fromFlag.getAttribute('src');
+  let toFlagSrc = toFlag.getAttribute('src');
+  fromSelect.value = toCur;
+  toSelect.value = fromCur;
+  fromFlag.setAttribute('src',toFlagSrc);
+  toFlag.setAttribute('src',fromFlagSrc);
 });
 
 convertBtn.addEventListener("click", () => {
-  /*Get the languages and fetch the translation */
+  /*Get the currencies and fetch the api to get the conversion rate */
   let inputValue = document.querySelector("input").value.trim();
-  console.log(!isNaN(inputValue) && inputValue !='')
-  console.log(inputValue);
   let value = !isNaN(inputValue) && inputValue !=''? inputValue : 1;
   let fromCur = fromSelect.value;
   let toCur = toSelect.value;
@@ -192,13 +196,10 @@ convertBtn.addEventListener("click", () => {
   )
     .then((response) => response.json())
     .then((data) => {
-      console.log(data.conversion_rates);
       let conversionRate = data.conversion_rates[`${toCur}`];
       let total = value * conversionRate;
-      console.log(value , conversionRate ,total)
       output.innerHTML = `<p class="output">${value} ${fromCur} =  ${parseFloat(total.toFixed(4))} ${toCur}</p>`
     }).catch((error)=>{
-      console.log(error);
       output.innerHTML = `<p class="output error">${error.message}</p>`
     });
 });
